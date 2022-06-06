@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>			//Used for UART
 #include <fcntl.h>			//Used for UART
 #include <termios.h>			//Used for UART
+#include <sys/ioctl.h>
+#include <sys/types.h>
 #include "global.h"
 
 int uart0_filestream = -1;
@@ -53,8 +56,33 @@ void init(char *ttyDevice)
 	tcflush(uart0_filestream, TCIFLUSH);
 	tcsetattr(uart0_filestream, TCSANOW, &options);
 }
-void closeDevice()
+void serialFlush(int fd)
+{
+	tcflush(fd, TCIOFLUSH);
+}
+void serialClose(int fd)
 {	
-	close(uart0_filestream);
-	printf("device closed.\n");
+	close(fd);
+}
+void serialPutchar(int fd, unsigned char c)
+{
+	write(fd, &c, 1);
+}
+void serialPuts(int fd, char *s)
+{
+	write(fd, s, strlen(s));
+}
+int serialDataAvail(int fd)
+{
+	int result;
+	if(ioctl(fd, FIONREAD, &result) == -1)
+		return -1;
+	return result;
+}
+int serialGetchar(int fd)
+{
+	char x;
+	if(read(fd, &x, 1)!=1)
+		return -1;
+	return (int)x & 0xFF;	
 }

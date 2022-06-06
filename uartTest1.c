@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 		//}
 	}
 	
-	closeDevice();
+	serialClose(uart0_filestream);
 	return 0;
 
 }
