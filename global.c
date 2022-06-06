@@ -4,7 +4,7 @@
 #include <fcntl.h>			//Used for UART
 #include <termios.h>			//Used for UART
 #include <sys/ioctl.h>
-#include <sys/types.h>
+//#include <sys/types.h>
 #include "global.h"
 
 int uart0_filestream = -1;
